@@ -10,13 +10,11 @@ var gifs = null;
 
 function get(url) {
   // TODO: Get the most recent 25? or the highest rated?
-  $.getJSON('https://www.reddit.com/r/gifs/new.json', function(res) {
+  $.getJSON('https://www.reddit.com/r/gifs/hot.json', function(res) {
     var returnedGifs;
     returnedGifs = res.data.children.map(function(gif) { return gif.data.url });
 
-    console.log(cleanGifs(returnedGifs));
-
-    gifs = cleanGifs(returnedGifs);
+    gifs = formatGifs(returnedGifs);
 
     GifStore.emitChange();
   });
@@ -33,13 +31,21 @@ function get(url) {
   // req.send(null);
 };
 
-function cleanGifs(gifs) {
+function formatGifs(gifs) {
   return gifs.map(function(gif) {
-    if (gif.slice(-1) === 'v') {
-      return gif.slice(0, -1);
+    if (!!gif.match('imgur') && gif.slice(-1) === 'v') {
+      // Turn imgur html5 videos into gifs (sadly)
+      gif = gif.slice(0, -1);
+    } else if (gif.match('gfycat')) {
+      // Turn gfycat html5 videos (ie every gfycat gif) into their gif format
+      gif = gif.split('//');
+      // insert giant into the url
+      gif.splice(1, 0, '//giant.');
+      // return our url plus the format
+      gif = gif.join('') + '.gif';
     }
 
-    return gif;
+    return { url: gif, loaded: false };
   })
 }
 

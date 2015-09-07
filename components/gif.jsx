@@ -1,14 +1,28 @@
 var React = require('react');
+require('./gif.css');
 
 var Gif = React.createClass({
   componentDidMount: function() {
-    console.log('mounted!')
+    // Register change listener with GifStore for all loaded
+  },
+
+  getInitialState: function() {
+    return {
+      displayImg: false
+    }
+  },
+
+  imgLoaded: function() {
+    this.setState({
+      displayImg: true
+    });
   },
 
   render: function() {
     return (
       <div>
-        <img src={this.props.url} />
+        <div className="hello">Why, here I am</div>
+        <img onLoad={this.imgLoaded} style={{display: this.state.displayImg ? 'inline' : 'none' }} src={this.props.url} />
       </div>
     )
   }

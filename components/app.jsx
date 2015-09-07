@@ -24,10 +24,8 @@ var App = React.createClass({
   },
 
   renderGifs: function() {
-    console.log(this.state.gifs);
     return this.state.gifs.map(function(gif, index) {
-      console.log('rendering another gif')
-      return <Gif url={gif} key={index}/>
+      return <Gif url={gif.url} key={index}/>
     });
   },
 

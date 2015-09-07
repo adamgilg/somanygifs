@@ -32,7 +32,11 @@ function get(url) {
 };
 
 function formatGifs(gifs) {
-  return gifs.map(function(gif) {
+  var formattedGifs = {};
+
+  // Remove the reddit link
+  gifs.shift();
+  gifs.forEach(function(gif) {
     if (!!gif.match('imgur') && gif.slice(-1) === 'v') {
       // Turn imgur html5 videos into gifs (sadly)
       gif = gif.slice(0, -1);
@@ -45,8 +49,10 @@ function formatGifs(gifs) {
       gif = gif.join('') + '.gif';
     }
 
-    return { url: gif, loaded: false };
+    formattedGifs[gif] = false;
   })
+
+  return formattedGifs;
 }
 
 var GifStore = assign({}, EventEmitter.prototype, {
@@ -71,6 +77,10 @@ Dispatcher.register(function(action) {
   switch(action.actionType) {
     case Constants.GET:
       get();
+      break;
+    case Constants.GIF_LOADED:
+      gifs[action.url] = true;
+      GifStore.emitChange();
       break;
   }
 });

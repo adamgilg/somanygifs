@@ -6,6 +6,13 @@ var GifActions = {
     Dispatcher.dispatch({
       actionType: Constants.GET
     })
+  },
+  gifLoaded: function(url) {
+    console.log('in gifloaded')
+    Dispatcher.dispatch({
+      actionType: Constants.GIF_LOADED,
+      url: url
+    })
   }
 };
 

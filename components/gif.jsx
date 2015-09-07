@@ -1,4 +1,5 @@
 var React = require('react');
+var GifActions = require('../actions/GifActions');
 require('./gif.css');
 
 var Gif = React.createClass({
@@ -16,6 +17,8 @@ var Gif = React.createClass({
     this.setState({
       displayImg: true
     });
+
+    GifActions.gifLoaded(this.props.url);
   },
 
   render: function() {
